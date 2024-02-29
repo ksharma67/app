@@ -1,0 +1,19 @@
+<div class="login-container">
+    <section class="login-hero" style="background-image: url('../../../assets/images/hero-section-image.png');">
+      <h2>Login to Your Account</h2>
+      <p>Welcome back! Log in to connect with the community.</p>
+    </section>
+    <form (ngSubmit)="onLogin()" class="login-form" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="loginData.UserEmail" name="email" placeholder="Enter your email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" [(ngModel)]="loginData.UserPassword" name="password" placeholder="Enter your password" required>
+      </div>
+      <button type="submit" class="btn-join-now" [disabled]="!loginForm.valid">Log In</button>
+      <p class="signup-prompt">Don't have an account? <a routerLink="/signup">Join Now</a></p>
+    </form>
+  </div>
+  

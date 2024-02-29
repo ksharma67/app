@@ -1,0 +1,93 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #ff4081;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds depth with a subtle shadow */
+  font-family: 'Nunito', 'Arial', sans-serif; /* A round, friendly font */
+  position: relative; /* Ensure the hamburger icon is positioned correctly */
+}
+
+.hamburger {
+  display: none; /* Hide by default */
+  font-size: 24px; /* Size of the hamburger icon */
+  background: none;
+  border: none;
+  color: #4a4a4a; /* Color of the hamburger icon */
+}
+
+.navbar-brand {
+  font-size: 24px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold; /* Stronger presence */
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 18px; /* Larger font for readability */
+  padding: 5px 10px; /* Padding for a button-like appearance */
+  border-radius: 15px; /* Rounded edges for a friendly look */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.nav-links a:hover, .nav-links a:focus {
+  background-color: #f7e4e9; /* Lighter shade on hover for interactivity */
+  color: #4a4a4a;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block; /* Show the hamburger icon on mobile devices */
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: white;
+  }
+
+  .nav-links {
+    display: none; /* Hide the links by default on mobile devices */
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* Full width */
+    position: absolute;
+    top: 60px; /* Position below the navbar */
+    left: 0;
+    background-color: #ff4081; /* Background of the expanded menu */
+  }
+
+  .nav-links a {
+    display: block; /* Stack the links vertically */
+    margin: 10px 0; /* Add some space between the links */
+    padding: 10px;
+    width: 100%; /* Full width */
+    text-align: center; /* Center the text */
+  }
+
+  .show {
+    display: flex;
+  }
+  
+  .collapsed {
+    display: none;
+  }
+
+  .nav-links a:hover, .nav-links a:focus {
+    background-color: #f7e4e9;
+    color: #4a4a4a;
+  }
+
+  .nav-links.collapsed {
+    display: none;
+  }
+
+  .nav-links:not(.collapsed) {
+    display: flex; /* This will show the menu when the hamburger icon is clicked */
+    z-index: 2;
+  }
+}

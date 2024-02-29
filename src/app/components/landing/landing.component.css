@@ -1,0 +1,99 @@
+.landing-container {
+  text-align: center;
+}
+
+.hero {
+  position: relative;
+  background-image: url('../../../assets/images/hero-section-image.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  color: white;
+  padding: 100px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.hero h1, .hero p {
+  color: #ffffff; /* Adjust color to ensure visibility */
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7); /* Soft text shadow for legibility */
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3); /* Dark overlay for better text contrast */
+  z-index: 1;
+}
+
+/* Ensure the text and button are positioned above the overlay */
+.hero h1, .hero p, .btn-join-now {
+  position: relative;
+  z-index: 2;
+}
+
+/* Make sure your text and button are positioned above the overlay */
+.hero h1, .hero p, .btn-join-now {
+  position: relative;
+  z-index: 2;
+}
+
+.features {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap; /* Ensures responsiveness */
+  padding: 20px;
+}
+
+.feature img {
+  width: 80px; /* Adjusted for better visibility */
+  margin-bottom: 10px;
+}
+
+.btn-join-now, .btn-discover-more {
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  padding: 15px 30px; /* Adjusted padding for better visibility */
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 16px; /* Increased font size for better readability */
+  border-radius: 5px; /* Added for aesthetic rounded corners */
+}
+
+.social-proof {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  font-style: italic; /* Adds a touch of style to testimonials */
+}
+
+.call-to-action {
+  margin-top: 40px;
+  padding: 20px;
+}
+
+/* Additional styles for responsiveness */
+@media (max-width: 768px) {
+
+  .hero {
+    padding: 50px 10px; /* Less padding on smaller screens */
+    background-size: auto 100%; /* Adjust background size to be fully visible on small screens */
+  }
+
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature {
+    margin-bottom: 20px;
+  }
+}

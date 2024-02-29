@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <a href="/" class="navbar-brand">App</a>
+  <button class="hamburger" (click)="toggleNavbar()">☰</button>
+  <div class="nav-links" [class.collapsed]="isMenuCollapsed">
+    <a href="/" (click)="isMenuCollapsed = true">Home</a>
+    <a href="/about" (click)="isMenuCollapsed = true">About Us</a>
+    <a href="/features" (click)="isMenuCollapsed = true">Features</a>
+    <ng-container *ngIf="!isLoggedIn; else logoutLink">
+      <a routerLink="/signup" (click)="isMenuCollapsed = true">Join Now</a>
+    </ng-container>
+    <ng-template #logoutLink>
+      <button (click)="logout()">Log Out</button>
+    </ng-template>
+  </div>
+</nav>

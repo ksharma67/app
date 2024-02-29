@@ -1,0 +1,65 @@
+.community-container {
+  text-align: center;
+  padding: 20px;
+  background-color: #fff; /* Use the color of your actual app background */
+  border-radius: 20px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.community-title {
+  color: #333; /* Your text color */
+  margin-bottom: 8px;
+}
+
+.community-description {
+  color: #666; /* Your text color */
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.group-icons {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap; /* Allows icons to wrap in smaller screens */
+}
+
+.group-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px; /* Adds some spacing around each icon */
+}
+
+.group-icon img {
+  width: 60px; /* Adjust as needed */
+  margin-bottom: 8px;
+}
+
+.group-icon span {
+  font-size: 14px;
+  color: #333; /* Your text color */
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .community-container {
+    padding: 15px;
+    border-radius: 10px;
+    max-width: 100%; /* Allows the container to expand */
+  }
+
+  .group-icons {
+    flex-direction: column; /* Stack icons vertically on smaller screens */
+  }
+
+  .group-icon img {
+    width: 50px; /* Slightly smaller images on mobile */
+  }
+
+  .community-description, .group-icon span {
+    font-size: 12px; /* Smaller text on mobile */
+  }
+}

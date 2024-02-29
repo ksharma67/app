@@ -1,0 +1,50 @@
+.signup-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff; /* Optional: if you want a different background */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: adds subtle shadow */
+}
+
+.signup-hero {
+  text-align: center;
+  padding: 20px;
+  background-image: url('../../../assets/images/hero-section-image.png'); /* Adjust or remove as needed */
+  color: white;
+  border-radius: 8px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.btn-sign-up {
+  background-color: #ff69b4; /* You can adjust to fit a different action or keep it */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.signup-prompt {
+  text-align: center;
+  margin-top: 20px;
+}
+
+a {
+  color: #ff69b4; /* Keep consistent with your theme */
+}

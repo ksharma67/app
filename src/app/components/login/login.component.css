@@ -1,0 +1,47 @@
+.login-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+}
+
+.login-hero {
+  text-align: center;
+  padding: 20px;
+  color: white;
+  border-radius: 8px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.btn-join-now {
+  background-color: #ff69b4; /* Adjust to match your theme */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.signup-prompt {
+  text-align: center;
+  margin-top: 20px;
+}
+
+a {
+  color: #ff69b4; /* Adjust to match your theme */
+}

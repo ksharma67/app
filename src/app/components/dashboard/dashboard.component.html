@@ -1,0 +1,23 @@
+<div class="dashboard-container">
+    <h2>Welcome to Your Dashboard, {{ user?.UserName }}!</h2>
+    <p>This is your personal dashboard where you can see your activities and other important information.</p>
+    
+    <!-- Display user details if user data is loaded -->
+    <div *ngIf="userLoaded">
+        <div class="user-details">
+            <h3>User Details</h3>
+            <ul>
+                <li><strong>Name:</strong> {{ user?.UserName }}</li>
+                <li><strong>Email:</strong> {{ user?.UserEmail }}</li>
+                <!-- Display user image -->
+                <li><strong>Image:</strong> <img src="{{ user?.UserImage }}" alt="User Image"></li>
+                <!-- Add more user details as needed -->
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Show loading message while user data is being fetched -->
+    <div *ngIf="!userLoaded">
+        Loading user details...
+    </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="community-container">
+  <h2 class="community-title">Communities</h2>
+  <p class="community-description">
+    Provides support groups for women's life stages, if your quest is to consider pregnancy, motherhood, and menopause.
+  </p>
+  <div class="community-icons">
+    <div *ngFor="let community of communities" class="community-icon">
+      <img [src]="community.CommunityImage" [alt]="community.CommunityName + ' image'">
+    </div>
+  </div>
+</div>

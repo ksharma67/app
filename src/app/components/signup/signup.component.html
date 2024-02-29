@@ -1,0 +1,37 @@
+<div class="signup-container">
+  <section class="signup-hero">
+    <h2>Sign Up</h2>
+    <p>Welcome! Create an account to connect with the community.</p>
+  </section>
+  <form (ngSubmit)="onSignup()" [formGroup]="signupForm" class="signup-form">
+    <div class="form-group">
+      <label for="username">Name</label>
+      <input type="text" formControlName="UserName" class="form-control" id="username" placeholder="Enter your name" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" formControlName="UserEmail" class="form-control" id="email" placeholder="Your email address" required>
+      <!-- Error message for email input in wrong -->
+      <div *ngIf="signupForm.get('UserEmail')?.errors?.['email']" class="text-danger">
+        Please enter a valid email address.
+      </div>
+      <!-- Error message for email already in use -->
+      <div *ngIf="signupForm.get('UserEmail')?.errors?.['emailAlreadyInUse']" class="text-danger">
+        Email is already in use. Please choose a different email address.
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" formControlName="UserPassword" class="form-control" id="password" placeholder="Create a password" required>
+    </div>
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" formControlName="ConfirmPassword" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+      <div *ngIf="signupForm.controls['ConfirmPassword'] && signupForm.controls['ConfirmPassword'].errors?.['passwordsNotMatch']" class="text-danger">
+        Passwords do not match.
+      </div>
+    </div>
+    <button type="submit" class="btn-join-now" [disabled]="!signupForm.valid">Sign Up</button>
+    <p class="signup-prompt">Already have an account? <a routerLink="/login">Log in</a></p>
+  </form>
+</div>
