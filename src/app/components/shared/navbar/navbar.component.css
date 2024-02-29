@@ -40,6 +40,23 @@
   color: #4a4a4a;
 }
 
+.logout-btn {
+  color: white;
+  background-color: #ff4081;
+  border: none;
+  font-size: 18px;
+  padding: 5px 10px;
+  border-radius: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-btn:hover, .logout-btn:focus {
+  background-color: #f7e4e9;
+  color: #4a4a4a;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .hamburger {

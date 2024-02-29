@@ -10,6 +10,7 @@ import { CommunityComponent } from './components/community/community.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { AuthGuard } from './guards/auth.guard';
 
 // Define the routes for the application
 const routes: Routes = [
@@ -31,8 +32,9 @@ const routes: Routes = [
     component: LoginComponent  // Display LoginComponent at the '/login' path
   },
   {
-    path: 'dashboard/:id',
-    component: DashboardComponent  // Display DashboardComponent at the '/dashboard' path
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]  // Protect the Dashboard route
   },
   {
     path: 'community',
@@ -55,7 +57,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' }), HttpClientModule],  // Import the router module and HTTP client module
   exports: [RouterModule, HttpClientModule],  // Export the router module and HTTP client module
-  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}]
+  providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}, AuthGuard]
 })
 
 // Define the AppRoutingModule class

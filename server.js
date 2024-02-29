@@ -7,6 +7,7 @@ const path = require('path');
 const sequelize = require('./database/database.js');
 const dbConfig = require('./database/config.js');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 
 // Ensure the 'dotenv' package is loaded at the beginning of your application
 require('dotenv').config();
@@ -124,3 +125,17 @@ checkDatabaseConnection()
 
 // Print the database host
 console.log('Database host:', process.env.DB_HOST || 'default-host');
+
+// Print the JWT secret
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    
+    if (token == null) return res.sendStatus(401); // if there's no token
+    console.log('JWT SECRET:', JWT_SECRET);
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403); // if the token is invalid
+        req.user = user;
+        next(); // proceed to the next middleware/function
+    });
+};

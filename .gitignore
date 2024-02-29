@@ -23,7 +23,7 @@ node_modules/
 Thumbs.db
 
 # Angular cache
-.angular/cache
+.angular
 
 # Environment Variables
 .env.local

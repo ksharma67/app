@@ -43,7 +43,7 @@ export class SignupComponent implements OnInit {
     this.apiService.signup(formData).subscribe({
       next: (response) => {
         console.log('Signup successful', response);
-        this.router.navigate(['/dashboard', response?.UserID]);
+        this.router.navigate(['/dashboard']);
       },
       error: (error) => {
         console.error('Signup error', error);

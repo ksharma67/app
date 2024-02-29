@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
@@ -16,6 +16,15 @@ export class ApiService {
       catchError(error => this.handleError(error))
     );
   }
+
+  private getHttpHeaders(): HttpHeaders {
+    let headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const token = ApiService.getToken();
+    if (token) {
+        headers = headers.append('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+}
 
   loadServerLog(): Observable<any> {
     const mockLogData = {
@@ -76,27 +85,51 @@ export class ApiService {
       );
   }
 
-  // Method to get user details by ID
-  getUserDetailsById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}user/${id}/details`).pipe(
+  // Method to get details of the currently authenticated user
+  getCurrentUserDetails(): Observable<any> {
+    // Get the token from local storage
+    const token = ApiService.getToken();
+
+     // Check if token exists
+    if (!token) {
+      // Handle the case where token is missing
+      return throwError('Token not found in local storage');
+    }
+  
+    // Set the request headers with the token
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    // Send the request with the headers
+    return this.http.get<any>(`${this.baseUrl}user/me`, { headers }).pipe(
       catchError(this.handleError)
     );
   }
-
+  
   // Method to signup a new user
   signup(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}user/signup`, userData)
-      .pipe(
-        catchError(error => this.handleError(error))
-      );
-  }
+    return this.http.post<any>(`${this.baseUrl}user/signup`, userData).pipe(
+      tap(response => {
+        console.log("Received token:", response.token); // Optional: for debugging
+        if (response.token) {
+          ApiService.saveToken(response.token);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }  
 
   // Method to login a user
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}user/login`, { email, password })
-      .pipe(
-        catchError(this.handleError)
-      );
+      return this.http.post<any>(`${this.baseUrl}user/login`, { email, password })
+          .pipe(
+              tap(response => {
+                  console.log("Received token:", response.token); // Optional: for debugging
+                  ApiService.saveToken(response.token);
+              }),
+              catchError(this.handleError)
+          );
   }
 
   // Method to save JWT in local storage
