@@ -11,5 +11,6 @@
     <ng-template #logoutLink>
       <button class="logout-btn" (click)="logout()">Log Out</button>
     </ng-template>
+    <a routerLink="/dashboard" *ngIf="isLoggedIn && !isDashboardRoute" (click)="isMenuCollapsed = true">Profile</a>
   </div>
 </nav>

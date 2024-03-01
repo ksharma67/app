@@ -5,38 +5,38 @@
   padding: 20px;
   background-color: #ff4081;
   color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds depth with a subtle shadow */
-  font-family: 'Nunito', 'Arial', sans-serif; /* A round, friendly font */
-  position: relative; /* Ensure the hamburger icon is positioned correctly */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Nunito', 'Arial', sans-serif;
+  position: relative;
 }
 
 .hamburger {
-  display: none; /* Hide by default */
-  font-size: 24px; /* Size of the hamburger icon */
+  display: none;
+  font-size: 24px;
   background: none;
   border: none;
-  color: #4a4a4a; /* Color of the hamburger icon */
+  color: #4a4a4a;
 }
 
 .navbar-brand {
   font-size: 24px;
   color: white;
   text-decoration: none;
-  font-weight: bold; /* Stronger presence */
+  font-weight: bold;
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
   margin-left: 20px;
-  font-size: 18px; /* Larger font for readability */
-  padding: 5px 10px; /* Padding for a button-like appearance */
-  border-radius: 15px; /* Rounded edges for a friendly look */
-  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  font-size: 18px;
+  padding: 5px 15px; /* Increased padding for better touch target */
+  border-radius: 15px;
+  transition: background-color 0.3s;
 }
 
 .nav-links a:hover, .nav-links a:focus {
-  background-color: #f7e4e9; /* Lighter shade on hover for interactivity */
+  background-color: #f7e4e9;
   color: #4a4a4a;
 }
 
@@ -45,7 +45,7 @@
   background-color: #ff4081;
   border: none;
   font-size: 18px;
-  padding: 5px 10px;
+  padding: 5px 15px; /* Increased padding for better touch target */
   border-radius: 15px;
   text-decoration: none;
   cursor: pointer;
@@ -55,6 +55,30 @@
 .logout-btn:hover, .logout-btn:focus {
   background-color: #f7e4e9;
   color: #4a4a4a;
+}
+
+.nav-links .dashboard-link {
+  margin-left: 10px; /* Adjusted margin for dashboard link */
+}
+
+.nav-links a, .logout-btn {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px 15px; /* Adjusted padding for better touch target */
+  border-radius: 15px;
+  transition: background-color 0.3s;
+}
+
+/* Styling when links are hovered or focused */
+.nav-links a:hover, .nav-links a:focus, .logout-btn:hover, .logout-btn:focus {
+  background-color: #f7e4e9;
+  color: #4a4a4a;
+}
+
+/* Adjusted margin for all links including logout button */
+.nav-links a, .logout-btn {
+  margin: 10px 0; /* Add some vertical space between links */
 }
 
 /* Responsive adjustments */
@@ -106,5 +130,10 @@
   .nav-links:not(.collapsed) {
     display: flex; /* This will show the menu when the hamburger icon is clicked */
     z-index: 2;
+  }
+
+  .nav-links a, .logout-btn {
+    width: 80%; /* Adjusted width for better spacing */
+    margin: 10px auto; /* Center the links horizontally */
   }
 }
