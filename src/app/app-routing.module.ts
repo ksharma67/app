@@ -7,6 +7,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { CommunityComponent } from './components/community/community.component';
+import { CommunityChatComponent } from './components/community-chat/community-chat.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -39,6 +40,9 @@ const routes: Routes = [
   {
     path: 'community',
     component: CommunityComponent  // Display GroupsComponent at the '/groups' path
+  },
+  { path: 'community-chat', // Display CommunityChatComponent at the '/community-chat' path
+    component: CommunityChatComponent
   },
   {
     path: 'footer',

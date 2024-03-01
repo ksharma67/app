@@ -32,7 +32,6 @@ export class ApiService {
       logEntry2: 'Sample log entry 2',
       // Add more mock log entries if needed
     };
-    
     return new Observable<any>((observer) => {
       setTimeout(() => {
         observer.next(mockLogData);
@@ -55,34 +54,41 @@ export class ApiService {
     );
   }
 
-  // Create a new community
-  createCommunity(communityData: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}community`, communityData).pipe(
+  // Post a new chat message
+  postChatMessage(communityId: number, userId: number, messageText: string): Observable<any> {
+    const body = {
+      ChatMessageText: messageText,
+      ChatMessageUserID: userId,
+      CommunityID: communityId
+    };
+    return this.http.post<any>(`${this.baseUrl}chatMessage/`, body, { headers: this.getHttpHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Delete a community by ID
-  deleteCommunity(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}community/${id}`).pipe(
+  // Get chat messages for a specific community
+  getChatMessagesByCommunity(communityId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}chatMessage/community/${communityId}`, { headers: this.getHttpHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  // Method to GET all users
-  getAllUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}user`)
-      .pipe(
-        catchError(this.handleError)
-      );
+  // Add a user to a community
+  addUserToCommunity(communityUserCommunityID: number, communityUserUserID: number): Observable<any> {
+    const body = {
+      CommunityUserCommunityID: communityUserCommunityID,
+      CommunityUserUserID: communityUserUserID
+    };
+    return this.http.post<any>(`${this.baseUrl}communityUser/`, body, { headers: this.getHttpHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  // Method to GET a single user by ID
-  getUserById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}user/${id}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+  // Get all users in a specific community
+  getUsersByCommunity(communityId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}communityUser/community/${communityId}`, { headers: this.getHttpHeaders() }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   // Method to get details of the currently authenticated user
@@ -95,18 +101,16 @@ export class ApiService {
       // Handle the case where token is missing
       return throwError('Token not found in local storage');
     }
-  
     // Set the request headers with the token
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-  
     // Send the request with the headers
     return this.http.get<any>(`${this.baseUrl}user/me`, { headers }).pipe(
       catchError(this.handleError)
     );
   }
-  
+
   // Method to signup a new user
   signup(userData: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}user/signup`, userData).pipe(
@@ -118,7 +122,7 @@ export class ApiService {
       }),
       catchError(this.handleError)
     );
-  }  
+  }
 
   // Method to login a user
   login(email: string, password: string): Observable<any> {
@@ -150,14 +154,6 @@ export class ApiService {
   // Method to log out user by removing JWT from local storage
   static logout(): void {
     localStorage.removeItem(ApiService.tokenKey); // Access token key statically
-  }
-
-  // Method to POST a new user
-  createUser(userData: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}user`, userData)
-      .pipe(
-        catchError(this.handleError)
-      );
   }
 
   // Method to UPDATE a user

@@ -94,6 +94,8 @@ app.use(cors(corsOptions));
 // Routes
 const communityRoutes = require('./routes/community.js');
 const userRoutes = require('./routes/user.js');
+const chatMessageRoutes = require('./routes/chatMessage.js');
+const communityUserRoutes = require('./routes/communityUser.js');
 
 // Middleware
 app.use(express.json());
@@ -108,6 +110,8 @@ app.use((err, req, res, next) => {
 // Routes
 app.use('/api/community', communityRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/chatMessage', chatMessageRoutes);
+app.use('/api/communityUser', communityUserRoutes);
 
 // Start the server with database initialization
 const PORT = process.env.PORT || 3000;

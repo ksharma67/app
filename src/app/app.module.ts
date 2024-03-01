@@ -29,8 +29,11 @@ import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { CommunityComponent } from './components/community/community.component';
+import { CommunityChatComponent } from './components/community-chat/community-chat.component';
 
 import { ApiService } from './services/api.service';
+import { AuthService } from './services/auth.service';
+import { NavbarService} from './services/navbar.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
@@ -43,6 +46,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     DashboardComponent,
     SignupComponent,
     CommunityComponent,
+    CommunityChatComponent,
     FooterComponent,
     NotFoundComponent
   ],
@@ -65,7 +69,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     ReactiveFormsModule, // Required module for reactive forms
   ],
   // Importing the service
-  providers: [ApiService, provideAnimationsAsync()],
+  providers: [ApiService, AuthService, NavbarService, provideAnimationsAsync()],
   // Bootstrapping the app component
   bootstrap: [AppComponent],
 })

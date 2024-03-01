@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../services/api.service';
+import { NavbarService } from '../../../services/navbar.service'; // Update the path as needed
 
 @Component({
   selector: 'app-navbar',
@@ -9,27 +10,32 @@ import { ApiService } from '../../../services/api.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private router: Router) { }
-  
   public isMenuCollapsed = true;
-  public isLoggedIn = false; // Assuming you have a variable to track login status
+  public isLoggedIn = false; // This will be updated based on the observable
   
+  constructor(
+    private router: Router,
+    private navbarService: NavbarService,
+    private apiService: ApiService
+  ) { }
+
   ngOnInit(): void {
-    // Check if the user is logged in when the component initializes
+    // Subscribe to changes in login status
+    this.navbarService.currentLoginStatus.subscribe(status => {
+      this.isLoggedIn = status;
+    });
+
+    // Initial check for login status
     this.isLoggedIn = ApiService.isLoggedIn();
   }
-  
+
   toggleNavbar() {
     this.isMenuCollapsed = !this.isMenuCollapsed;
   }
-  
+
   logout() {
-    // Implement logout functionality here
-    // For example, clear localStorage, reset login status, navigate to logout page, etc.
-    // After logout, update isLoggedIn variable
-    ApiService.logout();
-    this.isLoggedIn = false;
-    // Redirect to home page or login page after logout
-    this.router.navigate(['/login']);
-  }
+    ApiService.logout(); // Correct way to call a static method
+    this.navbarService.updateLoginStatus(false); // Update navbar login status
+    this.router.navigate(['/login']); // Navigate to login page
+  }  
 }

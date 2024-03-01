@@ -1,0 +1,12 @@
+<div class="chat-container">
+    <ul class="messages-list">
+        <li *ngFor="let message of messages">
+            <strong>{{ message.Sender?.UserName }}:</strong> {{ message.ChatMessageText }}
+            <!-- Include other details as needed, e.g., timestamp -->
+        </li>
+    </ul>
+    <div class="message-input">
+        <input type="text" [(ngModel)]="newMessageText" placeholder="Type a message..." />
+        <button (click)="sendMessage()">Send</button>
+    </div>
+</div>

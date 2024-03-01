@@ -9,7 +9,21 @@ export interface Community {
     UserID: number;
     UserName: string;
     UserImage: string;
-    // Consider adding more fields as needed, such as:
-    // UserPassword: string; (Note: Typically not stored or managed on the client side)
-    // Token?: string; // Optional for storing authentication tokens
+    Token?: string;
   }
+
+  export interface CommunityUser {
+    CommunityUserID: number;
+    CommunityUserCommunityID: number;
+    CommunityUserUserID: number;
+  }
+
+  export interface ChatMessage {
+    ChatMessageID: number;
+    ChatMessageText: string;
+    ChatMessageDate: Date;
+    ChatMessageTime: string;
+    ChatMessageUserID: number;
+    user?: { UserName: string; }; // Adjust based on the actual structure
+}
+

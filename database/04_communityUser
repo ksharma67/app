@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS CommunityUser (
+    CommunityUserID INT,
+    CommunityUserCommunityID INT,
+    CommunityUserUserID INT,
+    PRIMARY KEY (CommunityUserID),
+    FOREIGN KEY (CommunityUserCommunityID) REFERENCES Community(CommunityID),
+    FOREIGN KEY (CommunityUserUserID) REFERENCES User(UserID)
+);

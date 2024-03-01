@@ -4,7 +4,7 @@
     Provides support groups for women's life stages, if your quest is to consider pregnancy, motherhood, and menopause.
   </p>
   <div class="community-icons">
-    <div *ngFor="let community of communities" class="community-icon">
+    <div *ngFor="let community of communities" (click)="openChat(community.CommunityID)" class="community-icon">
       <img [src]="community.CommunityImage" [alt]="community.CommunityName + ' image'">
     </div>
   </div>

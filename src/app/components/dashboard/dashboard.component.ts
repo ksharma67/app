@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
+import { NavbarService } from 'src/app/services/navbar.service';
 import { User } from '../../common/app-interfaces';
 
 @Component({
@@ -14,7 +15,8 @@ export class DashboardComponent implements OnInit {
 
     constructor(
         private apiService: ApiService,
-        private changeDetectorRef: ChangeDetectorRef // Still needed for manual change detection
+        private navbarService: NavbarService,
+        private changeDetectorRef: ChangeDetectorRef
     ) { }
 
     ngOnInit(): void {
@@ -27,6 +29,7 @@ export class DashboardComponent implements OnInit {
                 this.user = user;
                 this.userLoaded = true; // Indicate that user details have been loaded
                 console.log('User details:', this.user);
+                this.navbarService.updateLoginStatus(true);
                 this.changeDetectorRef.detectChanges(); // Manually trigger change detection
             },
             error: (error) => {
