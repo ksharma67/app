@@ -24,6 +24,9 @@ export interface Community {
     ChatMessageDate: Date;
     ChatMessageTime: string;
     ChatMessageUserID: number;
-    user?: { UserName: string; }; // Adjust based on the actual structure
+    Sender: User;
+    IsAnonymous: boolean;
+    ParentMessageID: number | null;
+    Replies?: ChatMessage[];
 }
 

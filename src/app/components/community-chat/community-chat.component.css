@@ -1,3 +1,93 @@
-:host {
+/* Overall chat container */
+.chat-container {
+  font-family: 'Arial', sans-serif;
+  background-color: #FFF0F5; /* Light pink background */
+  border: 1px solid #FFB6C1; /* Soft pink border */
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Style for each message */
+.messages-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.messages-list li {
+  background-color: #ffffff;
+  border: 1px solid #FFB6C1; /* Soft pink border for messages */
+  border-radius: 15px; /* Rounded corners for a softer look */
+  padding: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+/* Timestamp styling */
+.message-timestamp, .reply-timestamp {
+  font-size: 0.75rem;
+  color: #888888;
+  display: block; /* Ensure timestamps are on their own line */
+  margin-top: 5px;
+}
+
+/* Username and message text */
+strong {
+  color: #DB7093; /* Plum color for usernames */
+  font-weight: normal; /* Avoid bold usernames for a softer appearance */
+}
+
+/* Reply and Send buttons */
+button {
+  background-color: #DB7093; /* Matching plum color for buttons */
+  color: white;
+  border: none;
+  border-radius: 20px; /* More rounded buttons for a friendly appearance */
+  padding: 5px 15px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 10px; /* Space above the button */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+button:hover {
+  background-color: #C71585; /* Darker shade on hover for contrast */
+}
+
+/* Input fields styling */
+.message-input input[type="text"], .reply-input input[type="text"] {
+  width: calc(100% - 120px);
+  padding: 10px;
+  border: 1px solid #FFB6C1; /* Soft pink border */
+  border-radius: 20px; /* Rounded input fields */
+  margin-right: 10px;
+}
+
+/* Positioning and styling for the message input section */
+.message-input {
+  margin-top: 20px;
+}
+
+/* Styling for the 'Post Anonymously' checkbox */
+label {
   display: block;
+  margin-top: 10px;
+  color: #888; /* Subdued text color */
+  font-size: 0.9rem;
+}
+
+input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Specific styles for reply inputs to differentiate from new message input */
+.reply-input {
+  background-color: #FDF5E6; /* Light yellow background for contrast */
+  border: 1px dashed #FFB6C1;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 15px; /* Match the rounded theme */
 }

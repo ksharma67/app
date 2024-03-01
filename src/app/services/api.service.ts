@@ -55,17 +55,25 @@ export class ApiService {
   }
 
   // Post a new chat message
-  postChatMessage(communityId: number, userId: number, messageText: string): Observable<any> {
+  postChatMessage(communityId: number, userId: number, messageText: string, isAnonymous: boolean, parentMessageId?: number): Observable<any> {
     const body = {
       ChatMessageText: messageText,
       ChatMessageUserID: userId,
-      CommunityID: communityId
+      CommunityID: communityId,
+      IsAnonymous: isAnonymous,
+      ParentMessageID: parentMessageId || null // Include the parentMessageId in the request body, defaulting to null if not provided
     };
     return this.http.post<any>(`${this.baseUrl}chatMessage/`, body, { headers: this.getHttpHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
+  getRepliesByMessageId(messageId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}chatMessage/replies/${messageId}`, { headers: this.getHttpHeaders() }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
   // Get chat messages for a specific community
   getChatMessagesByCommunity(communityId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}chatMessage/community/${communityId}`, { headers: this.getHttpHeaders() }).pipe(

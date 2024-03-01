@@ -4,7 +4,6 @@ const Community = require('./Community.js');
 const CommunityUser = require('./CommunityUser.js');
 const ChatMessage = require('./ChatMessage.js');
 
-
 // User to CommunityUser
 User.hasMany(CommunityUser, { foreignKey: 'CommunityUserUserID' });
 CommunityUser.belongsTo(User, { foreignKey: 'CommunityUserUserID' });
@@ -20,6 +19,10 @@ ChatMessage.belongsTo(User, { foreignKey: 'ChatMessageUserID', as: 'Sender' }); 
 // Community to ChatMessage
 Community.hasMany(ChatMessage, { foreignKey: 'CommunityID' });
 ChatMessage.belongsTo(Community, { foreignKey: 'CommunityID' });
+
+// ChatMessage self-referencing for replies
+ChatMessage.hasMany(ChatMessage, { foreignKey: 'ParentMessageID', as: 'Replies' }); // Association for a message to have replies
+ChatMessage.belongsTo(ChatMessage, { foreignKey: 'ParentMessageID', as: 'ParentMessage' }); // Association for a reply to reference its parent message
 
 // Import other models here
 module.exports = {

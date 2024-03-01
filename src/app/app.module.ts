@@ -36,6 +36,9 @@ import { AuthService } from './services/auth.service';
 import { NavbarService} from './services/navbar.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
+import { ReversePipe } from './pipes/reverse.pipe';
+import { RelativeTimePipe } from './pipes/relative-time.pipe';
+
 @NgModule({
   // Declaring all the components used in the module
   declarations: [
@@ -45,8 +48,10 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     LoginComponent,
     DashboardComponent,
     SignupComponent,
+    ReversePipe,
     CommunityComponent,
     CommunityChatComponent,
+    RelativeTimePipe,
     FooterComponent,
     NotFoundComponent
   ],

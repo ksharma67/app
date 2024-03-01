@@ -1,12 +1,38 @@
 <div class="chat-container">
     <ul class="messages-list">
-        <li *ngFor="let message of messages">
-            <strong>{{ message.Sender?.UserName }}:</strong> {{ message.ChatMessageText }}
-            <!-- Include other details as needed, e.g., timestamp -->
+        <li *ngFor="let message of messages | reverse">
+            <!-- Display the main message with date and time -->
+            <strong>{{ message.IsAnonymous ? 'Anonymous' : message.Sender.UserName }}:</strong> {{ message.ChatMessageText }}
+            <div class="message-timestamp">{{ message.ChatMessageDate | relativeTime }}</div>
+            <button (click)="startReplyingTo(message.ChatMessageID)">Reply</button>
+            <br> <!-- Insert line break for spacing -->
+            
+            <!-- If replying to this message, show reply input -->
+            <div *ngIf="replyingTo === message.ChatMessageID" class="reply-input">
+                <input type="text" [(ngModel)]="replyText" placeholder="Type a reply..." />
+                <label>
+                    <input type="checkbox" [(ngModel)]="isAnonymousReply" /> Post Anonymously
+                </label>
+                <button (click)="sendMessage()">Send Reply</button>
+                <button (click)="cancelReply()">Cancel</button>
+            </div>
+            
+            <!-- Nested Replies, assuming replies have the same structure as messages -->
+            <ul *ngIf="message.Replies && message.Replies.length > 0">
+                <li *ngFor="let reply of message.Replies | reverse">
+                    <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong> {{ reply.ChatMessageText }}
+                    <div class="message-timestamp">{{ reply.ChatMessageDate | relativeTime }}</div>
+                    <!-- Additional interactions for replies if needed -->
+                </li>
+            </ul>
         </li>
     </ul>
-    <div class="message-input">
+    <!-- Input for new messages -->
+    <div class="message-input" *ngIf="!replyingTo">
         <input type="text" [(ngModel)]="newMessageText" placeholder="Type a message..." />
+        <label>
+            <input type="checkbox" [(ngModel)]="isAnonymous" /> Post Anonymously
+        </label>
         <button (click)="sendMessage()">Send</button>
     </div>
 </div>
