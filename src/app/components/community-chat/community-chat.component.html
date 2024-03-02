@@ -2,6 +2,11 @@
     <div *ngIf="selectedMessage" class="back-button-container">
         <button (click)="deselectMessage()">←</button>
     </div>    
+    <div class="search-container">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search messages...">
+        <button (click)="searchMessages(searchTerm)">Search</button>
+    </div>
+    
     <div *ngIf="hasMoreMessages" class="load-more-container">
         <button (click)="loadChatMessages(true)">Load More Messages</button>
     </div>

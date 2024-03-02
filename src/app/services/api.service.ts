@@ -81,6 +81,18 @@ export class ApiService {
     );
   }  
 
+  // Search chat messages within a specific community by text
+  searchChatMessages(communityId: number, searchTerm: string, limit: number = 10, offset: number = 0): Observable<any[]> {
+    // Encode the search term to ensure the URL is correctly formed, especially if the search term includes spaces or special characters
+    const encodedSearchTerm = encodeURIComponent(searchTerm);
+    return this.http.get<any[]>(
+        `${this.baseUrl}chatMessage/community/${communityId}/search?searchTerm=${encodedSearchTerm}&limit=${limit}&offset=${offset}`,
+        { headers: this.getHttpHeaders() }
+    ).pipe(
+        catchError(this.handleError)
+    );
+}
+
   // Add a user to a community
   addUserToCommunity(communityUserCommunityID: number, communityUserUserID: number): Observable<any> {
     const body = {

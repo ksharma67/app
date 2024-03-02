@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const { ChatMessage, User } = require('../models');
 
 // Post a new chat message
@@ -94,6 +95,40 @@ router.get('/replies/:id', async (req, res) => {
         res.json(replies);
     } catch (error) {
         console.error('Error fetching chat message replies:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
+// Search for chat messages within a community by text
+router.get('/community/:id/search', async (req, res) => {
+    try {
+        const { searchTerm } = req.query; // Get the search term from query parameters
+        const communityId = req.params.id; // Get the community ID from the URL parameters
+
+        if (!searchTerm) {
+            return res.status(400).send('Search term is required');
+        }
+
+        const messages = await ChatMessage.findAll({
+            where: {
+                CommunityID: communityId,
+                ChatMessageText: {
+                    [Op.like]: `%${searchTerm}%` // Use the Op.like operator for partial text search
+                }
+            },
+            include: [
+                {
+                    model: User,
+                    as: 'Sender',
+                    attributes: ['UserName', 'UserID']
+                }
+            ],
+            order: [['ChatMessageDate', 'DESC'], ['ChatMessageTime', 'DESC']]
+        });
+
+        res.json(messages);
+    } catch (error) {
+        console.error('Error searching for chat messages:', error);
         res.status(500).send('Internal server error');
     }
 });

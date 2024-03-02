@@ -21,6 +21,7 @@ export class CommunityChatComponent implements OnInit {
     replyingTo: number | null = null; // Added for reply functionality
     replyText: string = ''; // Text for the reply message
     selectedMessage: any = null; // Holds the currently selected message
+    searchTerm: string = ''; // Search term for filtering messages
 
     // Pagination properties
     pageSize: number = 10; // Number of messages per page
@@ -126,6 +127,22 @@ export class CommunityChatComponent implements OnInit {
         // You might also want to reset any other related state here, such as clearing reply text
         this.replyText = '';
       }
+
+      // Method to search messages within the community
+      searchMessages(searchTerm: string) {
+        if (!this.communityId) return;
+    
+        this.apiService.searchChatMessages(this.communityId, searchTerm)
+            .subscribe({
+                next: (messages) => {
+                    this.messages = messages;
+                    this.cd.detectChanges();
+                    console.log('Search results:', messages);
+                },
+                error: (error) => console.error('Error searching messages:', error)
+            });
+    }
+    
 
     // Method to load replies for a specific message, with pagination support
     loadReplies(messageId: number, loadMore: boolean = false) {

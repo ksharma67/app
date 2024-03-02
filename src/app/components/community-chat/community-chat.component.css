@@ -115,3 +115,32 @@ input[type="checkbox"] {
 .back-button-container button svg {
   margin-right: 5px; /* Space between the icon and the text */
 }
+
+.search-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.search-container input {
+  flex-grow: 1; /* Allow input to take up available space */
+  margin-right: 10px; /* Space between input and button */
+  padding: 5px;
+  border: 1px solid #FFB6C1; /* Soft pink border */
+  border-radius: 5px;
+}
+
+.search-container button {
+  padding: 5px 15px;
+  background-color: #DB7093; /* Plum color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-container button:hover {
+  background-color: #C71585;
+}
+
