@@ -1,33 +1,44 @@
 <div class="chat-container">
+    <div *ngIf="selectedMessage" class="back-button-container">
+        <button (click)="deselectMessage()">←</button>
+    </div>    
+    <div *ngIf="hasMoreMessages" class="load-more-container">
+        <button (click)="loadChatMessages(true)">Load More Messages</button>
+    </div>
     <ul class="messages-list">
         <li *ngFor="let message of messages | reverse">
-            <!-- Display the main message with date and time -->
-            <strong>{{ message.IsAnonymous ? 'Anonymous' : message.Sender.UserName }}:</strong> {{ message.ChatMessageText }}
-            <div class="message-timestamp">{{ message.ChatMessageDate | relativeTime }}</div>
-            <button (click)="startReplyingTo(message.ChatMessageID)">Reply</button>
-            <br> <!-- Insert line break for spacing -->
-            
-            <!-- If replying to this message, show reply input -->
+            <div (click)="selectMessage(message)">
+                <strong>{{ message.IsAnonymous ? 'Anonymous' : message.Sender.UserName }}:</strong> 
+                {{ message.ChatMessageText }}
+                <div class="message-timestamp">{{ message.ChatMessageDate | relativeTime }}</div>
+                <div *ngIf="!message.Replies">
+                    <span>{{ message.ReplyCount || 'No' }} replies</span>
+                </div>
+            </div>
+
+            <button (click)="startReplyingTo(message.ChatMessageID); $event.stopPropagation()">Reply</button>
+
             <div *ngIf="replyingTo === message.ChatMessageID" class="reply-input">
                 <input type="text" [(ngModel)]="replyText" placeholder="Type a reply..." />
                 <label>
                     <input type="checkbox" [(ngModel)]="isAnonymousReply" /> Post Anonymously
                 </label>
-                <button (click)="sendMessage()">Send Reply</button>
-                <button (click)="cancelReply()">Cancel</button>
+                <button (click)="sendMessage(); $event.stopPropagation()">Send Reply</button>
+                <button (click)="cancelReply(); $event.stopPropagation()">Cancel</button>
             </div>
-            
-            <!-- Nested Replies, assuming replies have the same structure as messages -->
-            <ul *ngIf="message.Replies && message.Replies.length > 0">
-                <li *ngFor="let reply of message.Replies | reverse">
-                    <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong> {{ reply.ChatMessageText }}
+            <ul *ngIf="selectedMessage?.ChatMessageID === message.ChatMessageID && message.Replies && message.Replies.length > 0">
+                <li *ngFor="let reply of message.Replies">
+                    <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong> 
+                    {{ reply.ChatMessageText }}
                     <div class="message-timestamp">{{ reply.ChatMessageDate | relativeTime }}</div>
-                    <!-- Additional interactions for replies if needed -->
                 </li>
+                <button *ngIf="replyPagination[message.ChatMessageID]?.hasMoreReplies" 
+                        (click)="loadReplies(message.ChatMessageID, true); $event.stopPropagation()">
+                    Load More Replies
+                </button>
             </ul>
         </li>
     </ul>
-    <!-- Input for new messages -->
     <div class="message-input" *ngIf="!replyingTo">
         <input type="text" [(ngModel)]="newMessageText" placeholder="Type a message..." />
         <label>

@@ -9,6 +9,7 @@ import { User } from '../../common/app-interfaces';
     styleUrls: ['./dashboard.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
 export class DashboardComponent implements OnInit {
     user: User | null = null;
     userLoaded: boolean = false;

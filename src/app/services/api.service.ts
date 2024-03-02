@@ -68,18 +68,18 @@ export class ApiService {
     );
   }
 
-  getRepliesByMessageId(messageId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}chatMessage/replies/${messageId}`, { headers: this.getHttpHeaders() }).pipe(
+  getRepliesByMessageId(messageId: number, limit: number = 10, offset: number = 0): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}chatMessage/replies/${messageId}?limit=${limit}&offset=${offset}`, { headers: this.getHttpHeaders() }).pipe(
       catchError(this.handleError)
     );
-  }
+  }  
   
   // Get chat messages for a specific community
-  getChatMessagesByCommunity(communityId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}chatMessage/community/${communityId}`, { headers: this.getHttpHeaders() }).pipe(
+  getChatMessagesByCommunity(communityId: number, limit: number = 10, offset: number = 0): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}chatMessage/community/${communityId}?limit=${limit}&offset=${offset}`, { headers: this.getHttpHeaders() }).pipe(
       catchError(this.handleError)
     );
-  }
+  }  
 
   // Add a user to a community
   addUserToCommunity(communityUserCommunityID: number, communityUserUserID: number): Observable<any> {

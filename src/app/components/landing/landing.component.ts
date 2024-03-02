@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavbarService } from 'src/app/services/navbar.service';
 
 @Component({
   selector: 'app-landing',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
 
 export class LandingComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private navbarService: NavbarService,) { }
 
   ngOnInit(): void {
   }

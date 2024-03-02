@@ -25,31 +25,34 @@ router.post('/', async (req, res) => {
 // Get all chat messages for a community, including user details
 router.get('/community/:id', async (req, res) => {
     try {
+        const limit = parseInt(req.query.limit) || 10; // Default limit
+        const offset = parseInt(req.query.offset) || 0; // Default offset
+
         let messages = await ChatMessage.findAll({
-            where: { CommunityID: req.params.id },
+            where: { CommunityID: req.params.id, ParentMessageID: null }, // Assuming ParentMessageID: null means it's a top-level message
+            limit: limit,
+            offset: offset,
             include: [
                 {
                     model: User,
-                    as: 'Sender', // Matching the alias in the model association
-                    attributes: ['UserName', 'UserID'] // Include UserID always, UserName conditionally
-                },
-                {
-                    model: ChatMessage,
-                    as: 'Replies',
-                    include: [{ // Optionally include sender details for replies as well
-                        model: User,
-                        as: 'Sender',
-                        attributes: ['UserName', 'UserID']
-                    }]
+                    as: 'Sender',
+                    attributes: ['UserName', 'UserID']
                 }
-            ]
+            ],
+            order: [['ChatMessageDate', 'DESC'], ['ChatMessageTime', 'DESC']]
         });
 
-        // Optionally process messages to anonymize based on IsAnonymous flag
-        // Note: This simple example doesn't alter the structure of replies
+        // Manually append ReplyCount to each message - note this is not efficient for large datasets
+        for (let message of messages) {
+            const replyCount = await ChatMessage.count({
+                where: { ParentMessageID: message.ChatMessageID }
+            });
+            message.dataValues.ReplyCount = replyCount; // Append the reply count to each message
+        }
+
         messages = messages.map(message => {
             if (message.IsAnonymous) {
-                message.Sender = { UserName: 'Anonymous', UserID: null }; // Adjust for anonymity
+                message.Sender = { UserName: 'Anonymous', UserID: null };
             }
             return message;
         });
@@ -62,21 +65,35 @@ router.get('/community/:id', async (req, res) => {
 });
 
 // Get replies for a specific chat message
-router.get('/replies/:messageId', async (req, res) => {
+router.get('/replies/:id', async (req, res) => {
     try {
-        const messageId = req.params.messageId;
+        const limit = parseInt(req.query.limit) || 10; // Default limit
+        const offset = parseInt(req.query.offset) || 0; // Default offset
+
         let replies = await ChatMessage.findAll({
-            where: { ParentMessageID: messageId },
-            include: [{
-                model: User,
-                as: 'Sender',
-                attributes: ['UserName', 'UserID']
-            }]
+            where: { ParentMessageID: req.params.id },
+            limit: limit,
+            offset: offset,
+            include: [
+                {
+                    model: User,
+                    as: 'Sender',
+                    attributes: ['UserName', 'UserID']
+                }
+            ],
+            order: [['ChatMessageDate', 'DESC'], ['ChatMessageTime', 'DESC']]
+        });
+
+        replies = replies.map(reply => {
+            if (reply.IsAnonymous) {
+                reply.Sender = { UserName: 'Anonymous', UserID: null };
+            }
+            return reply;
         });
 
         res.json(replies);
     } catch (error) {
-        console.error('Error fetching replies:', error);
+        console.error('Error fetching chat message replies:', error);
         res.status(500).send('Internal server error');
     }
 });

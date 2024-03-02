@@ -1,93 +1,117 @@
 /* Overall chat container */
 .chat-container {
   font-family: 'Arial', sans-serif;
-  background-color: #FFF0F5; /* Light pink background */
-  border: 1px solid #FFB6C1; /* Soft pink border */
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 600px;
-  margin: 20px auto;
+  background-color: #FFF0F5; /* Light pink background for a soothing effect */
+  border: 1px solid #FFB6C1; /* Soft pink border for a cohesive color scheme */
+  border-radius: 10px; /* Rounded edges for a modern look */
+  padding: 20px; /* Comfortable padding around the content */
+  max-width: 600px; /* Optimal width for readability */
+  margin: 20px auto; /* Center align the container */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
 }
 
 /* Style for each message */
 .messages-list {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
 }
 
 .messages-list li {
-  background-color: #ffffff;
-  border: 1px solid #FFB6C1; /* Soft pink border for messages */
-  border-radius: 15px; /* Rounded corners for a softer look */
-  padding: 10px;
-  margin-bottom: 10px;
-  position: relative;
+  background-color: #ffffff; /* White background for messages */
+  border: 1px solid #FFB6C1; /* Soft pink border matching the theme */
+  border-radius: 15px; /* Rounded corners for messages */
+  padding: 10px; /* Padding inside each message */
+  margin-bottom: 10px; /* Space between messages */
+  position: relative; /* Allows for absolute positioning of children */
 }
 
 /* Timestamp styling */
 .message-timestamp, .reply-timestamp {
-  font-size: 0.75rem;
-  color: #888888;
+  font-size: 0.75rem; /* Smaller font size for timestamps */
+  color: #888888; /* Subdued color for less emphasis */
   display: block; /* Ensure timestamps are on their own line */
-  margin-top: 5px;
+  margin-top: 5px; /* Space above the timestamp */
 }
 
 /* Username and message text */
 strong {
-  color: #DB7093; /* Plum color for usernames */
-  font-weight: normal; /* Avoid bold usernames for a softer appearance */
+  color: #DB7093; /* Plum color for usernames, adding a pop of color */
+  font-weight: normal; /* Normal weight for a softer appearance */
 }
 
 /* Reply and Send buttons */
 button {
-  background-color: #DB7093; /* Matching plum color for buttons */
-  color: white;
-  border: none;
-  border-radius: 20px; /* More rounded buttons for a friendly appearance */
-  padding: 5px 15px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  margin-top: 10px; /* Space above the button */
+  background-color: #DB7093; /* Plum background for buttons to match usernames */
+  color: white; /* White text for contrast */
+  border: none; /* No border for a cleaner look */
+  border-radius: 20px; /* Rounded buttons for a friendly touch */
+  padding: 5px 15px; /* Comfortable padding within buttons */
+  cursor: pointer; /* Cursor change to indicate interactiveness */
+  font-size: 0.9rem; /* Slightly smaller font size for buttons */
+  margin-top: 10px; /* Space above buttons */
   transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
 
 button:hover {
-  background-color: #C71585; /* Darker shade on hover for contrast */
+  background-color: #C71585; /* Darker shade on hover for visual feedback */
 }
 
 /* Input fields styling */
 .message-input input[type="text"], .reply-input input[type="text"] {
-  width: calc(100% - 120px);
-  padding: 10px;
-  border: 1px solid #FFB6C1; /* Soft pink border */
-  border-radius: 20px; /* Rounded input fields */
-  margin-right: 10px;
+  width: calc(100% - 120px); /* Dynamic width to leave space for the button */
+  padding: 10px; /* Comfortable padding for typing */
+  border: 1px solid #FFB6C1; /* Soft pink border matching the theme */
+  border-radius: 20px; /* Rounded edges for consistency */
+  margin-right: 10px; /* Space between the input field and the button */
 }
 
 /* Positioning and styling for the message input section */
 .message-input {
-  margin-top: 20px;
+  margin-top: 20px; /* Space above the new message input section */
 }
 
 /* Styling for the 'Post Anonymously' checkbox */
 label {
-  display: block;
-  margin-top: 10px;
-  color: #888; /* Subdued text color */
-  font-size: 0.9rem;
+  display: block; /* Block display to align checkbox and label */
+  margin-top: 10px; /* Space above the checkbox */
+  color: #888; /* Subdued color for the label */
+  font-size: 0.9rem; /* Appropriate font size for readability */
 }
 
 input[type="checkbox"] {
-  margin-right: 5px;
+  margin-right: 5px; /* Space between the checkbox and its label */
 }
 
 /* Specific styles for reply inputs to differentiate from new message input */
 .reply-input {
-  background-color: #FDF5E6; /* Light yellow background for contrast */
-  border: 1px dashed #FFB6C1;
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 15px; /* Match the rounded theme */
+  background-color: #FDF5E6; /* Light yellow background for visual differentiation */
+  border: 1px dashed #FFB6C1; /* Dashed border for a distinct look */
+  margin-top: 10px; /* Space above the reply input section */
+  padding: 10px; /* Padding inside the reply input box */
+  border-radius: 15px; /* Rounded corners to match the overall design */
+}
+
+.back-button-container button {
+  background-color: #FFB6C1; /* Soft pink background to match the theme */
+  color: white; /* White text for contrast */
+  border: 1px solid #DB7093; /* Plum border to complement the button colors */
+  padding: 5px 15px; /* Padding around the text for a comfortable click area */
+  border-radius: 20px; /* Rounded corners to match other buttons */
+  cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+  font-size: 0.9rem; /* Match the font size of other buttons */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  display: inline-flex; /* Use flex to center the icon and text */
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Center content horizontally */
+  margin-bottom: 10px; /* Space below the button for separation */
+}
+
+.back-button-container button:hover {
+  background-color: #C71585; /* Darker shade on hover for visual feedback */
+}
+
+.back-button-container button i,
+.back-button-container button svg {
+  margin-right: 5px; /* Space between the icon and the text */
 }

@@ -28,5 +28,6 @@ export interface Community {
     IsAnonymous: boolean;
     ParentMessageID: number | null;
     Replies?: ChatMessage[];
+    ReplyCount?: number;
 }
 
