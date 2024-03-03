@@ -8,6 +8,8 @@
   max-width: 600px; /* Optimal width for readability */
   margin: 20px auto; /* Center align the container */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-height: 800px; /* Allow the container to grow with content */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 /* Style for each message */
@@ -24,6 +26,10 @@
   padding: 10px; /* Padding inside each message */
   margin-bottom: 10px; /* Space between messages */
   position: relative; /* Allows for absolute positioning of children */
+}
+
+.messages-list li:last-child {
+  margin-bottom: 0; /* Remove margin bottom for the last message to prevent unnecessary spacing */
 }
 
 /* Timestamp styling */

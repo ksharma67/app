@@ -1,12 +1,7 @@
 <div class="chat-container">
     <div *ngIf="selectedMessage" class="back-button-container">
-        <button (click)="deselectMessage()">←</button>
-    </div>    
-    <div class="search-container">
-        <input type="text" [(ngModel)]="searchTerm" placeholder="Search messages...">
-        <button (click)="searchMessages(searchTerm)">Search</button>
-    </div>
-    
+        <button (click)="deselectMessage()">← Back</button>
+    </div>  
     <div *ngIf="hasMoreMessages" class="load-more-container">
         <button (click)="loadChatMessages(true)">Load More Messages</button>
     </div>
@@ -15,36 +10,33 @@
             <div (click)="selectMessage(message)">
                 <strong>{{ message.IsAnonymous ? 'Anonymous' : message.Sender.UserName }}:</strong> 
                 {{ message.ChatMessageText }}
-                <div class="message-timestamp">{{ message.ChatMessageDate | relativeTime }}</div>
-                <div *ngIf="!message.Replies">
-                    <span>{{ message.ReplyCount || 'No' }} replies</span>
+                <div class="message-timestamp">{{ message.ChatMessageDate | date:'short' }}</div>
+                <div *ngIf="message.ReplyCount > 0">
+                    <span (click)="selectMessage(message); $event.stopPropagation()">{{ message.ReplyCount }} replies</span>
+                </div>
+                <ul *ngIf="isMessageSelected && selectedMessage === message && selectedMessage?.Replies && selectedMessage?.Replies!.length > 0">
+                    <li *ngFor="let reply of selectedMessage?.Replies">
+                        <!-- Display each reply's text -->
+                        <div>{{ reply.ChatMessageText }}</div>
+                        <div class="reply-timestamp">{{ reply.ChatMessageDate | date:'short' }}</div>
+                        <!-- Optionally display sender information if needed -->
+                        <!-- <div>Sender: {{ reply.Sender.UserName }}</div> -->
+                    </li>
+                </ul>
+                <button *ngIf="!isMessageSelected || (isMessageSelected && selectedMessage?.ChatMessageID === message.ChatMessageID)"
+                        (click)="startReplyingTo(message.ChatMessageID); $event.stopPropagation()">Reply</button>
+                <div *ngIf="replyingTo === message.ChatMessageID" class="reply-input">
+                    <input type="text" [(ngModel)]="replyText" placeholder="Type a reply..." />
+                    <label>
+                        <input type="checkbox" [(ngModel)]="isAnonymousReply" /> Post Anonymously
+                    </label>
+                    <button (click)="sendMessage(); $event.stopPropagation()">Send Reply</button>
+                    <button (click)="cancelReply(); $event.stopPropagation()">Cancel</button>
                 </div>
             </div>
-
-            <button (click)="startReplyingTo(message.ChatMessageID); $event.stopPropagation()">Reply</button>
-
-            <div *ngIf="replyingTo === message.ChatMessageID" class="reply-input">
-                <input type="text" [(ngModel)]="replyText" placeholder="Type a reply..." />
-                <label>
-                    <input type="checkbox" [(ngModel)]="isAnonymousReply" /> Post Anonymously
-                </label>
-                <button (click)="sendMessage(); $event.stopPropagation()">Send Reply</button>
-                <button (click)="cancelReply(); $event.stopPropagation()">Cancel</button>
-            </div>
-            <ul *ngIf="selectedMessage?.ChatMessageID === message.ChatMessageID && message.Replies && message.Replies.length > 0">
-                <li *ngFor="let reply of message.Replies">
-                    <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong> 
-                    {{ reply.ChatMessageText }}
-                    <div class="message-timestamp">{{ reply.ChatMessageDate | relativeTime }}</div>
-                </li>
-                <button *ngIf="replyPagination[message.ChatMessageID]?.hasMoreReplies" 
-                        (click)="loadReplies(message.ChatMessageID, true); $event.stopPropagation()">
-                    Load More Replies
-                </button>
-            </ul>
         </li>
     </ul>
-    <div class="message-input" *ngIf="!replyingTo">
+    <div class="message-input" *ngIf="!replyingTo && !isMessageSelected">
         <input type="text" [(ngModel)]="newMessageText" placeholder="Type a message..." />
         <label>
             <input type="checkbox" [(ngModel)]="isAnonymous" /> Post Anonymously

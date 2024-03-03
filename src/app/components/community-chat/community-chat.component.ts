@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ChatMessage, User } from '../../common/app-interfaces';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ActivatedRoute } from '@angular/router';
+import { ChatMessage } from '../../common/app-interfaces';
 
 @Component({
     selector: 'app-community-chat',
@@ -13,15 +13,21 @@ import { ActivatedRoute } from '@angular/router';
 
 export class CommunityChatComponent implements OnInit {
     communityId?: number;
-    messages: any[] = [];
+    messages: ChatMessage[] = [];
+    selectedMessage: ChatMessage | null = null;
     newMessageText: string = '';
     currentUserId?: number;
     isAnonymous: boolean = false; // Flag to track anonymous posting
     isAnonymousReply: boolean = false; // Flag to track anonymous replying
     replyingTo: number | null = null; // Added for reply functionality
     replyText: string = ''; // Text for the reply message
-    selectedMessage: any = null; // Holds the currently selected message
     searchTerm: string = ''; // Search term for filtering messages
+
+    // Flag to track whether a message is selected
+    isMessageSelected: boolean = false;
+
+    // Map to store private messages by message ID
+    private messagesMap = new Map<number, any>();
 
     // Pagination properties
     pageSize: number = 10; // Number of messages per page
@@ -29,62 +35,66 @@ export class CommunityChatComponent implements OnInit {
     hasMoreMessages: boolean = true; // Flag to indicate if there are more messages to load
     replyPagination: { [messageId: number]: { currentPage: number, pageSize: number, hasMoreReplies: boolean } } = {};
 
-    constructor(private route: ActivatedRoute, private apiService: ApiService, private authService: AuthService, private cd: ChangeDetectorRef) { }
+    constructor(
+        private route: ActivatedRoute, 
+        private apiService: ApiService, 
+        private authService: AuthService, 
+        private cd: ChangeDetectorRef) { }
 
 
-    ngOnInit() {
-      this.communityId = this.route.snapshot.params['communityId'];
-      if (this.communityId) {
-          this.loadChatMessages();
-      }
-      this.fetchCurrentUserDetails();
-    }
+        ngOnInit() {
+            this.route.params.subscribe(params => {
+                this.communityId = params['communityId'];
+                if (this.communityId) {
+                    this.loadChatMessages();
+                }
+                this.fetchCurrentUserDetails();
+            });
+          }
 
-    loadChatMessages(loadMore: boolean = false) {
-        if (!this.communityId) return;
-
-        if (loadMore) {
-            this.currentPage++; // Load the next page of messages
-        } else {
-            this.currentPage = 0; // Only reset to the first page if not loading more, but keep old messages
+          loadChatMessages(loadMore: boolean = false) {
+            if (!this.communityId) return;
+    
+            // Clear messages map before loading new messages
+            if (!loadMore) {
+                this.messagesMap.clear();
+                this.currentPage = 0;
+            }
+        
+            const offset = this.currentPage * this.pageSize;
+        
+            this.apiService.getChatMessagesByCommunity(this.communityId, this.pageSize, offset).subscribe({
+                next: (messages) => {
+                    if (messages.length < this.pageSize) {
+                        this.hasMoreMessages = false;
+                    } else {
+                        this.hasMoreMessages = true;
+                    }
+        
+                    messages.forEach(message => {
+                        this.messagesMap.set(message.ChatMessageID, message);
+                    });
+                    
+                    this.messages = Array.from(this.messagesMap.values());
+                    this.messages.sort((a, b) => new Date(b.ChatMessageDate).getTime() - new Date(a.ChatMessageDate).getTime());
+                    
+                    this.cd.detectChanges();
+                },
+                error: (error) => console.error('Error loading chat messages:', error)
+            });
         }
-
-        const offset = this.currentPage * this.pageSize;
-
-        this.apiService.getChatMessagesByCommunity(this.communityId, this.pageSize, offset).subscribe({
-        next: (messages) => {
-            if (messages.length < this.pageSize) {
-                this.hasMoreMessages = false; // No more messages to load
-            } else {
-                this.hasMoreMessages = true;
-            }
-            // Always append new messages without clearing existing ones
-            if (!loadMore && this.currentPage === 0) {
-                // For the initial load or refresh, prepend new messages to ensure they appear at the top
-                this.messages = [...messages, ...this.messages];
-            } else {
-                // For loading more, append at the end
-                this.messages = [...this.messages, ...messages];
-            }
-            this.cd.detectChanges();
-            console.log('Loaded chat messages:', messages);
-        },
-        error: (error) => console.error('Error loading chat messages:', error)
-    });
-}
-
-    fetchCurrentUserDetails() {
-        this.apiService.getCurrentUserDetails().subscribe({
-            next: (user) => {
-                this.currentUserId = user.UserID;
-                this.cd.detectChanges();
-            },
-            error: (error) => console.error('Error fetching current user details:', error)
-        });
-    }
+    
+        fetchCurrentUserDetails() {
+            this.apiService.getCurrentUserDetails().subscribe({
+                next: (user) => {
+                    this.currentUserId = user.UserID;
+                    this.cd.detectChanges();
+                },
+                error: (error) => console.error('Error fetching current user details:', error)
+            });
+        }
     
     sendMessage() {
-        // Determine whether it's a new message or a reply, and set the text accordingly
         const text = this.replyingTo ? this.replyText : this.newMessageText;
         
         if (!this.communityId || !text.trim() || this.currentUserId === undefined) {
@@ -92,7 +102,6 @@ export class CommunityChatComponent implements OnInit {
             return;
         }
     
-        // Adjust the API call to include `undefined` instead of `null` for non-reply messages
         this.apiService.postChatMessage(this.communityId, this.currentUserId, text, this.isAnonymous, this.replyingTo || undefined).subscribe({
             next: () => {
                 // Clear the text fields and reset the replyingTo state
@@ -101,32 +110,36 @@ export class CommunityChatComponent implements OnInit {
                 this.replyingTo = null;
                 this.isAnonymous = false;
     
-                // Load the new messages after sending
+                // Ideally, instead of reloading all messages, you'd only fetch or update the UI with the newly sent message
+                // For now, we'll simulate fetching new messages as an example
                 this.apiService.getChatMessagesByCommunity(this.communityId!, this.pageSize, 0).subscribe({
                     next: (messages) => {
-                        if (messages.length > 0) {
-                            // Append new messages to the existing array
-                            this.messages = [...this.messages, ...messages];
+                        messages.forEach(message => {
+                            this.messagesMap.set(message.ChatMessageID, message);
+                        });
     
-                            // Sort messages based on ChatMessageDate in descending order
-                            this.messages.sort((a, b) => new Date(b.ChatMessageDate).getTime() - new Date(a.ChatMessageDate).getTime());
+                        this.messages = Array.from(this.messagesMap.values());
+                        this.messages.sort((a, b) => new Date(b.ChatMessageDate).getTime() - new Date(a.ChatMessageDate).getTime());
     
-                            this.cd.detectChanges();
-                        }
+                        this.cd.detectChanges();
                     },
                     error: (error) => console.error('Error loading new messages after sending:', error)
                 });
             },
             error: (error) => console.error('Error sending message:', error)
         });
-    }
+    }    
     
     deselectMessage() {
+        // Reset selected message and related state
         this.selectedMessage = null;
-        this.replyingTo = null; // Also reset replyingTo if you want to cancel any reply action
-        // You might also want to reset any other related state here, such as clearing reply text
+        this.isMessageSelected = false;
+        this.replyingTo = null;
         this.replyText = '';
-      }
+        // Reload all messages
+        this.loadChatMessages();
+    }
+    
 
       // Method to search messages within the community
       searchMessages(searchTerm: string) {
@@ -136,73 +149,109 @@ export class CommunityChatComponent implements OnInit {
             .subscribe({
                 next: (messages) => {
                     this.messages = messages;
-                    this.cd.detectChanges();
+                    this.cd.detectChanges(); // Manually trigger change detection
                     console.log('Search results:', messages);
                 },
                 error: (error) => console.error('Error searching messages:', error)
             });
     }
-    
+
+    clearSearch() {
+        this.searchTerm = ''; // Clear the search term
+        this.loadChatMessages(); // Optionally reload messages or reset to a default view
+        this.cd.detectChanges(); // Trigger change detection to update the view
+    }    
 
     // Method to load replies for a specific message, with pagination support
     loadReplies(messageId: number, loadMore: boolean = false) {
+        // Check if pagination info is available for the message ID
+        const timestamp = new Date().getTime();
         if (!this.replyPagination[messageId]) {
             this.replyPagination[messageId] = { currentPage: 0, pageSize: 10, hasMoreReplies: true };
         }
     
-        const paginationInfo = this.replyPagination[messageId];
+        // Increment current page if loading more
         if (loadMore) {
-            paginationInfo.currentPage++;
+            this.replyPagination[messageId].currentPage++;
         }
     
-        const offset = paginationInfo.currentPage * paginationInfo.pageSize;
-        console.log('Loading replies for message:', messageId, 'with offset:', offset);
-        // Proceed to load replies only if needed
-        if (loadMore || !this.selectedMessage.Replies) {
-            this.apiService.getRepliesByMessageId(messageId, paginationInfo.pageSize, offset).subscribe({
-                next: (replies) => {
-                    // Logic to append or set replies...
-                    console.log('Loaded replies:', replies);
+        // Calculate offset based on current page and page size
+        const offset = this.replyPagination[messageId].currentPage * this.replyPagination[messageId].pageSize;
+    
+        // Call API to fetch replies
+        this.apiService.getRepliesByMessageId(messageId, this.replyPagination[messageId].pageSize, offset).subscribe({
+            next: (replies) => {
+                let parentMessage = this.messagesMap.get(messageId);
+                console.log('Parent Message:', parentMessage);
+                if (parentMessage) {
+                    // Ensure the Replies array exists in the parent message
+                    if (!parentMessage.Replies) {
+                        parentMessage.Replies = [];
+                    }
+                    // Concatenate the loaded replies with existing replies
+                    parentMessage.Replies = parentMessage.Replies.concat(replies);
+                    console.log('Parent Message with Replies:', parentMessage);
+                    // Update the messages map and trigger change detection
+                    this.messagesMap.set(messageId, parentMessage);
                     this.cd.detectChanges();
-                    const messageIndex = this.messages.findIndex(m => m.ChatMessageID === messageId);
-                    if (messageIndex !== -1) {
-                    this.messages[messageIndex].Replies = replies;
-                    this.cd.detectChanges(); // Since you're using ChangeDetectionStrategy.OnPush
-                    }
-                    if (replies.length < paginationInfo.pageSize) {
-                        paginationInfo.hasMoreReplies = false; // No more replies to load
-                    } else {
-                        paginationInfo.hasMoreReplies = true;
-                    }
-                },
-                error: (error) => console.error('Error loading replies:', error)
-            });
-        }
+                }            
+                console.log('Replies:', replies);
+            },
+            error: (error) => {
+                console.error('Error loading replies:', error);
+            }
+        });
     }    
 
-    selectMessage(message: any) {
-        // Check if the clicked message is already selected
-        console.log('Selected message:', message);
+    selectMessage(message: ChatMessage) {
+        // If the same message is clicked again, toggle selection
         if (this.selectedMessage?.ChatMessageID === message.ChatMessageID) {
-            // If replies are loaded for the selected message, deselect it
-            if (this.selectedMessage.Replies) {
-                this.selectedMessage = null; // Deselect or close replies
-            } else {
-                // If replies are not loaded, load them
-                this.loadReplies(message.ChatMessageID);
-                console.log('Loading replies for message:', message.ChatMessageID);
+            // Toggle the selection state
+            this.isMessageSelected = !this.isMessageSelected;
+    
+            // If deselected, show all messages
+            if (!this.isMessageSelected) {
+                this.selectedMessage = null;
+                this.messages = Array.from(this.messagesMap.values());
             }
         } else {
-            // If a different message is clicked, load its replies
-            this.selectedMessage = { ...message };
-            if (!message.Replies) {
-                // Load replies for the selected message
-                this.loadReplies(message.ChatMessageID);
-                console.log('Loading replies for message:', message.ChatMessageID);
+            // Select a new message and focus on it and its replies
+            this.selectedMessage = this.messagesMap.get(message.ChatMessageID);
+            this.isMessageSelected = true;
+    
+            // Check if replies are already loaded for the message
+            if (!this.selectedMessage?.Replies) {
+                // If no replies loaded, initiate loading
+                if (!this.replyPagination[this.selectedMessage!.ChatMessageID]?.hasMoreReplies) {
+                    // Load replies only if there are more replies to load
+                    this.loadReplies(this.selectedMessage!.ChatMessageID);
+                    console.log('Loading replies for message:', this.selectedMessage!.ChatMessageID);
+                }
+            } else {
+                // Replies are already loaded, so directly update the messages array
+                this.updateMessagesWithReplies(this.selectedMessage, () => {
+                    // Trigger change detection to update the view
+                    this.cd.detectChanges();
+                });
             }
         }
     }    
 
+    updateMessagesWithReplies(selectedMessage: ChatMessage, callback: () => void) {
+        // Sort replies if necessary
+        if (Array.isArray(selectedMessage.Replies)) {
+            selectedMessage.Replies.sort((a, b) => new Date(a.ChatMessageDate).getTime() - new Date(b.ChatMessageDate).getTime());
+        }
+        // Set messages array to include the selected message and its replies
+        this.messages = [selectedMessage, ...(Array.isArray(selectedMessage.Replies) ? selectedMessage.Replies : [])];
+        console.log('Updated messages with replies:', this.messages);
+    
+        // Call the callback function if provided
+        if (callback) {
+            callback();
+        }
+    }
+    
     startReplyingTo(messageId: number) {
         this.replyingTo = messageId;
         console.log('Replying to message:', messageId);

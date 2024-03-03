@@ -20,7 +20,7 @@ export interface Community {
 
   export interface ChatMessage {
     ChatMessageID: number;
-    ChatMessageText: string;
+    ChatMessageText?: string;
     ChatMessageDate: Date;
     ChatMessageTime: string;
     ChatMessageUserID: number;

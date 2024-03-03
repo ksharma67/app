@@ -33,6 +33,8 @@ import { CommunityChatComponent } from './components/community-chat/community-ch
 
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
+import { StorageService } from './services/storage.service';
+import { ReplyCacheService } from './services/reply-caches.service';
 import { NavbarService} from './services/navbar.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -74,7 +76,7 @@ import { RelativeTimePipe } from './pipes/relative-time.pipe';
     ReactiveFormsModule, // Required module for reactive forms
   ],
   // Importing the service
-  providers: [ApiService, AuthService, NavbarService, provideAnimationsAsync()],
+  providers: [ApiService, AuthService, StorageService, ReplyCacheService, NavbarService, provideAnimationsAsync()],
   // Bootstrapping the app component
   bootstrap: [AppComponent],
 })
