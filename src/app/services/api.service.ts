@@ -22,14 +22,6 @@ export class ApiService {
     const token = ApiService.getToken();
     if (token) {
         headers = headers.append('Authorization', `Bearer ${token}`);
-        // Remove Cache-Control header to ensure that the API request is not cached
-        headers = headers.delete('Cache-Control');
-        // Remove Pragma header to ensure that the API request is not cached
-        headers = headers.delete('Pragma');
-        // Remove Expires header to ensure that the API request is not cached
-        headers = headers.delete('Expires');
-        // Remove If-None-Match header to ensure that the API request is not cached
-        headers = headers.delete('If-None-Match');
     }
     return headers;
 }

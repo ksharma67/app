@@ -109,10 +109,6 @@ const communityUserRoutes = require('./routes/communityUser.js');
 app.use(express.json());
 app.use(morgan('combined'));
 
-// Disable caching
-app.disable('etag'); // Disable ETag for all responses
-app.use(noCache);
-
 
 // Error handling middleware
 app.use((err, req, res, next) => {

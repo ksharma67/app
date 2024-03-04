@@ -15,7 +15,7 @@
             <div>
                 <div (click)="selectMessage(message)">
                     <!-- Message content -->
-                    <strong>{{ message.IsAnonymous ? 'Anonymous' : message.Sender?.UserName }}:</strong>
+                    <strong>{{ message.senderId === currentUserId ? 'Me' : (message.IsAnonymous ? 'Anonymous' : message.Sender?.UserName) }}:</strong>
                     {{ message.ChatMessageText }}
                     <div class="message-timestamp">{{ message.ChatMessageDate | relativeTime }}</div>
                     
@@ -23,9 +23,6 @@
                     <div *ngIf="message.ReplyCount > 0">
                         <span (click)="selectMessage(message); $event.stopPropagation()">{{ message.ReplyCount }} replies</span>
                     </div>
-                    
-                    <!-- Reply button -->
-                    <button (click)="startReplyingTo(message.ChatMessageID); $event.stopPropagation()">Reply</button>
                 </div>
             </div>
         </li>
@@ -36,8 +33,8 @@
         <li>
             <div>
                 <!-- Selected Message content -->
-                <div>
-                    <strong>{{ selectedMessage.IsAnonymous ? 'Anonymous' : selectedMessage.Sender.UserName }}:</strong> 
+                <div *ngIf="selectedMessage?.Sender">
+                    <strong>{{ selectedMessage.IsAnonymous ? 'Anonymous' : selectedMessage.Sender.UserName }}:</strong>
                     {{ selectedMessage.ChatMessageText }}
                     <div class="message-timestamp">{{ selectedMessage.ChatMessageDate | relativeTime }}</div>
                 </div>
@@ -46,13 +43,18 @@
                 <ul>
                     <li *ngFor="let reply of selectedMessage.Replies">
                         <!-- Display each reply's text -->
-                        <div>
+                        <div *ngIf="reply.Sender">
                             <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong>
                             <p>{{ reply.ChatMessageText }}</p>
                             <div class="message-timestamp">{{ reply.ChatMessageDate | relativeTime }}</div>
                         </div>
                     </li>
                 </ul>
+                
+                <!-- Load more replies button -->
+                <div *ngIf="selectedMessage && selectedMessage.Replies && selectedMessage.Replies.length > 10">
+                    <button (click)="loadReplies(selectedMessage.ChatMessageID, true)">Load More Replies</button>
+                </div>
                 
                 <!-- Reply input -->
                 <div class="reply-input" *ngIf="selectedMessage">
@@ -61,7 +63,7 @@
                         <input type="checkbox" [(ngModel)]="isAnonymous" /> Post Anonymously
                     </label>
                 </div>
-                <button *ngIf="selectedMessage && replyText.trim() !== ''" (click)="sendMessage()">Send Reply</button>
+                <button *ngIf="selectedMessage && replyText.trim() !== ''" (click)="sendMessage(selectedMessage.ChatMessageID)">Send Reply</button>
                 <button *ngIf="selectedMessage" (click)="cancelReply()">Cancel</button>                
             </div>
         </li>

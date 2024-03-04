@@ -102,13 +102,12 @@ export class CommunityChatComponent implements OnInit {
             });
         }
     
-        sendMessage() {
+        sendMessage(replyingToId?: number) {
+            this.replyingTo = replyingToId ?? null;
+            console.log(`Sending message. Community ID: ${this.communityId}, Current User ID: ${this.currentUserId}, Replying To: ${this.replyingTo}, Reply Text: "${this.replyText}", New Message Text: "${this.newMessageText}"`);
             const text = this.replyingTo ? this.replyText : this.newMessageText;
             if (!this.communityId || !text.trim() || this.currentUserId === undefined) {
-                console.log('Community ID:', this.communityId);
-                console.log('Text:', text.trim());
-                console.log('Current User ID:', this.currentUserId);
-                console.error('Required information missing. Cannot send message.');
+                console.error('Invalid input data. Message not sent.');
                 return;
             }
             console.log('Sending message:', text);
@@ -142,6 +141,7 @@ export class CommunityChatComponent implements OnInit {
                 },
                 error: (error) => console.error('Error sending message:', error)
             });
+            this.cd.detectChanges();
         }        
         
     deselectMessage() {
@@ -236,10 +236,12 @@ export class CommunityChatComponent implements OnInit {
         if (callback) {
             callback();
         }
+        this.cd.detectChanges();
     }
     
     startReplyingTo(messageId: number) {
         // Set the replyingTo state
+        console.log(`Starting to reply to messageId: ${messageId}`);
         this.replyingTo = messageId;
     
         // Check if the selected message is already set correctly
