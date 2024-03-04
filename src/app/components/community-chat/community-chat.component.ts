@@ -134,6 +134,7 @@ export class CommunityChatComponent implements OnInit {
                     this.replyText = '';
                     this.replyingTo = null;
                     this.isAnonymous = false;
+                    this.isAnonymousReply = false;
         
                     // Trigger change detection manually
                     this.cd.detectChanges();
@@ -158,9 +159,17 @@ export class CommunityChatComponent implements OnInit {
       searchMessages(searchTerm: string) {
         if (!this.communityId) return;
     
+        // If the search term is empty, reload all messages
+        if (!searchTerm.trim()) {
+            this.loadChatMessages();
+            return;
+        }
+    
+        // Call API to search messages
         this.apiService.searchChatMessages(this.communityId, searchTerm)
             .subscribe({
                 next: (messages) => {
+                    // Update the messages array with search results
                     this.messages = messages;
                     this.cd.detectChanges(); // Manually trigger change detection
                     console.log('Search results:', messages);
@@ -168,6 +177,7 @@ export class CommunityChatComponent implements OnInit {
                 error: (error) => console.error('Error searching messages:', error)
             });
     }
+    
 
     clearSearch() {
         this.searchTerm = ''; // Clear the search term
@@ -265,5 +275,6 @@ export class CommunityChatComponent implements OnInit {
     cancelReply() {
         this.replyingTo = null;
         this.replyText = '';
+        this.cd.detectChanges();
     }
 }

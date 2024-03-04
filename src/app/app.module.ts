@@ -37,6 +37,7 @@ import { NavbarService} from './services/navbar.service';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { ReversePipe } from './pipes/reverse.pipe';
+import { HighlightPipe } from './pipes/highlight.pipe';
 import { RelativeTimePipe } from './pipes/relative-time.pipe';
 
 @NgModule({
@@ -49,6 +50,7 @@ import { RelativeTimePipe } from './pipes/relative-time.pipe';
     DashboardComponent,
     SignupComponent,
     ReversePipe,
+    HighlightPipe,
     CommunityComponent,
     CommunityChatComponent,
     RelativeTimePipe,

@@ -43,7 +43,7 @@
                 <ul>
                     <li *ngFor="let reply of selectedMessage.Replies">
                         <!-- Display each reply's text -->
-                        <div *ngIf="reply.Sender">
+                        <div *ngIf="reply.Sender" class="replies-list">
                             <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong>
                             <p>{{ reply.ChatMessageText }}</p>
                             <div class="message-timestamp">{{ reply.ChatMessageDate | relativeTime }}</div>
@@ -64,7 +64,8 @@
                     </label>
                 </div>
                 <button *ngIf="selectedMessage && replyText.trim() !== ''" (click)="sendMessage(selectedMessage.ChatMessageID)">Send Reply</button>
-                <button *ngIf="selectedMessage" (click)="cancelReply()">Cancel</button>                
+                <!-- Don't show the cancel button until reply have some text in it -->
+                <button *ngIf="selectedMessage && replyText.trim() !== ''" (click)="cancelReply()">Cancel</button>
             </div>
         </li>
     </ul>    

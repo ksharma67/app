@@ -5,7 +5,6 @@
   border: 1px solid #FFB6C1; /* Soft pink border for a cohesive color scheme */
   border-radius: 10px; /* Rounded edges for a modern look */
   padding: 20px; /* Comfortable padding around the content */
-  max-width: 600px; /* Optimal width for readability */
   margin: 20px auto; /* Center align the container */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   max-height: 800px; /* Allow the container to grow with content */
@@ -77,6 +76,17 @@ button:hover {
   margin-top: 20px; /* Space above the new message input section */
 }
 
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 /* Styling for the 'Post Anonymously' checkbox */
 label {
   display: block; /* Block display to align checkbox and label */
@@ -96,6 +106,13 @@ input[type="checkbox"] {
   margin-top: 10px; /* Space above the reply input section */
   padding: 10px; /* Padding inside the reply input box */
   border-radius: 15px; /* Rounded corners to match the overall design */
+}
+
+.replies-list
+{
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
 }
 
 .back-button-container button {
