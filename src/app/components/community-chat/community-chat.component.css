@@ -3,6 +3,7 @@
   font-family: 'Arial', sans-serif;
   background-color: #FFF0F5; /* Light pink background for a soothing effect */
   border: 1px solid #FFB6C1; /* Soft pink border for a cohesive color scheme */
+  max-width: 90%; /* Limit the width to prevent excessive stretching */
   border-radius: 10px; /* Rounded edges for a modern look */
   padding: 20px; /* Comfortable padding around the content */
   margin: 20px auto; /* Center align the container */

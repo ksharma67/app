@@ -78,8 +78,9 @@ export class CommunityChatComponent implements OnInit {
                     } else {
                         this.hasMoreMessages = true;
                     }
-        
                     messages.forEach(message => {
+                        // Set the senderId property for each message based on ChatMessageUserID
+                        message.senderId = message.ChatMessageUserID;
                         this.messagesMap.set(message.ChatMessageID, message);
                     });
                     
@@ -114,15 +115,17 @@ export class CommunityChatComponent implements OnInit {
             this.apiService.postChatMessage(this.communityId, this.currentUserId, text, this.isAnonymous, this.replyingTo ?? undefined).subscribe({
                 next: (newMessage) => {
                     if (this.replyingTo) {
-                        // Update replies if replying to a message
-                        let replies = this.repliesMap.get(this.replyingTo) || [];
-                        replies = [...replies, newMessage];
+                        let replies = this.repliesMap.get(this.replyingTo) ?? [];
+                        replies = [newMessage, ...replies]; // Prepend the new reply
                         this.repliesMap.set(this.replyingTo, replies);
-        
-                        // Update selected message replies if it's currently being viewed
-                        if (this.selectedMessage && this.selectedMessage.ChatMessageID === this.replyingTo) {
-                            this.selectedMessage.Replies = replies;
+                
+                        if (this.selectedMessage?.ChatMessageID === this.replyingTo) {
+                          this.selectedMessage.Replies = replies; // Update the Replies array
+                          this.loadReplies(this.replyingTo); // Reload replies to update the view
+                          this.cd.detectChanges(); // Trigger change detection
                         }
+                        this.replyText = ''; // Clear the reply input field
+                        this.cd.detectChanges(); // Update the view
                     } else {
                         // Add new message to the messages map and array
                         this.messagesMap.set(newMessage.ChatMessageID, newMessage);
@@ -188,7 +191,6 @@ export class CommunityChatComponent implements OnInit {
     // Method to load replies for a specific message, with pagination support
     loadReplies(messageId: number, loadMore: boolean = false) {
         // Check if pagination info is available for the message ID
-        const timestamp = new Date().getTime();
         if (!this.replyPagination[messageId]) {
             this.replyPagination[messageId] = { currentPage: 0, pageSize: 10, hasMoreReplies: true };
         }
@@ -204,17 +206,18 @@ export class CommunityChatComponent implements OnInit {
         // Call API to fetch replies
         this.apiService.getRepliesByMessageId(messageId, this.replyPagination[messageId].pageSize, offset).subscribe({
             next: (replies) => {
-                // Check if replies are already loaded, update them in the map
-            const existingReplies = this.repliesMap.get(messageId) || [];
-            this.repliesMap.set(messageId, loadMore ? existingReplies.concat(replies) : replies);
-            
-            // If this message is currently selected, update the UI to show these replies
-            if (this.selectedMessage?.ChatMessageID === messageId) {
-                this.selectedMessage.Replies = this.repliesMap.get(messageId);
-                this.cd.detectChanges();
-            }
-        },
-        error: (error) => console.error('Error loading replies:', error)
+                // Sort replies by ChatMessageDate in descending order
+                replies.sort((a, b) => new Date(b.ChatMessageDate).getTime() - new Date(a.ChatMessageDate).getTime());
+                console.log('Loaded replies:', replies); // Debugging log
+                const existingReplies = this.repliesMap.get(messageId) || [];
+                this.repliesMap.set(messageId, loadMore ? existingReplies.concat(replies) : replies);
+        
+                if (this.selectedMessage?.ChatMessageID === messageId) {
+                    this.selectedMessage.Replies = this.repliesMap.get(messageId);
+                    this.cd.detectChanges();
+                }
+            },
+            error: (error) => console.error('Error loading replies:', error)
         });
     }    
 
@@ -241,7 +244,7 @@ export class CommunityChatComponent implements OnInit {
         // Set messages array to include the selected message and its replies
         this.messages = [selectedMessage, ...(Array.isArray(selectedMessage.Replies) ? selectedMessage.Replies : [])];
         console.log('Updated messages with replies:', this.messages);
-    
+        
         // Call the callback function if provided
         if (callback) {
             callback();
@@ -270,7 +273,11 @@ export class CommunityChatComponent implements OnInit {
                 replyInput.focus();
             }
         }, 0);
-    }    
+    }
+
+    trackByReplies(index: number, item: ChatMessage): number {
+        return item.ChatMessageID; // Return a unique identifier for tracking
+      }
 
     cancelReply() {
         this.replyingTo = null;

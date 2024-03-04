@@ -15,7 +15,7 @@
             <div>
                 <div (click)="selectMessage(message)">
                     <!-- Message content -->
-                    <strong>{{ message.senderId === currentUserId ? 'Me' : (message.IsAnonymous ? 'Anonymous' : message.Sender?.UserName) }}:</strong>
+                    <strong>{{ message.ChatMessageUserID === currentUserId ? 'Me' : (message.IsAnonymous ? 'Anonymous' : message.Sender?.UserName) }}:</strong>
                     {{ message.ChatMessageText }}
                     <div class="message-timestamp">{{ message.ChatMessageDate | relativeTime }}</div>
                     
@@ -40,11 +40,11 @@
                 </div>
                 
                 <!-- Replies -->
-                <ul>
-                    <li *ngFor="let reply of selectedMessage.Replies">
+                <ul *ngIf="selectedMessage?.Replies">
+                    <li *ngFor="let reply of selectedMessage.Replies; trackBy: trackByReplies">
                         <!-- Display each reply's text -->
                         <div *ngIf="reply.Sender" class="replies-list">
-                            <strong>{{ reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName }}:</strong>
+                            <strong>{{ reply.ChatMessageUserID === currentUserId ? 'Me' : (reply.IsAnonymous ? 'Anonymous' : reply.Sender.UserName) }}:</strong>
                             <p>{{ reply.ChatMessageText }}</p>
                             <div class="message-timestamp">{{ reply.ChatMessageDate | relativeTime }}</div>
                         </div>
