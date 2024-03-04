@@ -27,6 +27,14 @@ function readSqlFiles(dirPath) {
     });
 }
 
+// Function to disable caching
+function noCache(req, res, next) {
+    res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.header('Pragma', 'no-cache');
+    res.header('Expires', '0');
+    next();
+}
+
 // Function to execute SQL queries from the files
 async function runSqlFiles(dirPath) {
     try {
@@ -100,6 +108,11 @@ const communityUserRoutes = require('./routes/communityUser.js');
 // Middleware
 app.use(express.json());
 app.use(morgan('combined'));
+
+// Disable caching
+app.disable('etag'); // Disable ETag for all responses
+app.use(noCache);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

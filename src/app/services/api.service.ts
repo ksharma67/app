@@ -22,6 +22,14 @@ export class ApiService {
     const token = ApiService.getToken();
     if (token) {
         headers = headers.append('Authorization', `Bearer ${token}`);
+        // Remove Cache-Control header to ensure that the API request is not cached
+        headers = headers.delete('Cache-Control');
+        // Remove Pragma header to ensure that the API request is not cached
+        headers = headers.delete('Pragma');
+        // Remove Expires header to ensure that the API request is not cached
+        headers = headers.delete('Expires');
+        // Remove If-None-Match header to ensure that the API request is not cached
+        headers = headers.delete('If-None-Match');
     }
     return headers;
 }
@@ -69,7 +77,9 @@ export class ApiService {
   }
 
   getRepliesByMessageId(messageId: number, limit: number = 10, offset: number = 0): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}chatMessage/replies/${messageId}?limit=${limit}&offset=${offset}`, { headers: this.getHttpHeaders() }).pipe(
+    // Generate a unique timestamp as a query parameter
+    const cacheBuster = new Date().getTime();
+    return this.http.get<any[]>(`${this.baseUrl}chatMessage/replies/${messageId}?limit=${limit}&offset=${offset}&_=${cacheBuster}`, { headers: this.getHttpHeaders() }).pipe(
       catchError(this.handleError)
     );
   }  
